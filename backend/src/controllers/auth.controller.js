@@ -65,13 +65,7 @@ const LoginController = async (req, res) => {
 
 
 const ProfileController = async (req, res) => {
-    const token = req.cookies.instatoken
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    if (!decoded) {
-        return res.status(409).json({
-            message: "token is expired"
-        })
-    }
+    
     const user = await Usermodel.findOne({ _id: decoded.id })
     return res.status(200).json({
         message: "profile fetch successfully",

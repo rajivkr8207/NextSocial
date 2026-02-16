@@ -29,7 +29,7 @@ export default function Sidebar() {
       {/* 🔝 Top Logo */}
       <div>
         <h1 className="text-2xl font-bold px-3 mb-8">
-          MyApp
+          Next<span className="">Social</span>
         </h1>
 
         {/* 🔹 Center Navigation */}
