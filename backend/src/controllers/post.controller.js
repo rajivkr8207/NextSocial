@@ -29,9 +29,7 @@ const CreatePostController = async (req, res) => {
 
 
 const GetPostController = async (req, res) => {
-    const Allpost = await Postmodel.find({
-        user: req.user.id
-    })
+    const Allpost = await Postmodel.find()
     return res.status(200).json({
         message: 'post is fetch successfully',
         Allpost
