@@ -65,8 +65,7 @@ const LoginController = async (req, res) => {
 
 
 const ProfileController = async (req, res) => {
-    
-    const user = await Usermodel.findOne({ _id: decoded.id })
+    const user = await Usermodel.findOne({ _id: req.user.id })
     return res.status(200).json({
         message: "profile fetch successfully",
         user
@@ -80,9 +79,30 @@ const LogoutController = (req, res) => {
     });
 }
 
+const AllUserDataFetch = async (req, res) => {
+    const allUser = await Usermodel.find()
+    return res.status(200).json({
+        message: "all user is fetch",
+        allUser: allUser
+    })
+}
+
+const uniqueUserFetch = async (req, res) => {
+    const id = req.params.id
+    const uniqueUser = await Usermodel.findOne({
+        _id: id
+    })
+    return res.status(200).json({
+        message: "all user is fetch",
+        user: uniqueUser
+    })
+}
+
 module.exports = {
     RegisterController,
     LoginController,
     ProfileController,
-    LogoutController
+    LogoutController,
+    AllUserDataFetch,
+    uniqueUserFetch
 }

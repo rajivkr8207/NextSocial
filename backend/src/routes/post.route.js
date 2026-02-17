@@ -5,9 +5,9 @@ const IdentifyUser = require('../middleware/auth.middleware');
 const upload = multer({ storage: multer.memoryStorage() })
 const PostRouter = express.Router()
 
-PostRouter.post('/create', upload.single('imageurl'), IdentifyUser(), CreatePostController)
-PostRouter.get('/', IdentifyUser(), GetPostController)
-PostRouter.get('/:id', IdentifyUser(), GetPostUsingParams)
+PostRouter.post('/create', upload.single('imageurl'), IdentifyUser, CreatePostController)
+PostRouter.get('/', IdentifyUser, GetPostController)
+PostRouter.get('/:id', IdentifyUser, GetPostUsingParams)
 
 
 

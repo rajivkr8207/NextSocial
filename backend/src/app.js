@@ -7,6 +7,7 @@ const authRouter = require('./routes/auth.route')
 const app = express()
 // const multer  = require('multer')
 const PostRouter = require('./routes/post.route')
+const followerRouter = require('./routes/follower.route')
 
 app.use(express.json())
 app.use(morgan('dev'))
@@ -19,6 +20,7 @@ app.use(cors({
 
 app.use('/api/auth', authRouter)
 app.use('/api/post', PostRouter)
+app.use('/api/follower', followerRouter)
 
 
 
