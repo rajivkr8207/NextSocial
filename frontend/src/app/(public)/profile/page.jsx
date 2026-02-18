@@ -1,10 +1,13 @@
 "use client";
 
 import { FetchProfile } from "@/lib/auth";
+import { FetchPost } from "@/lib/posts";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function ProfilePage() {
     const [user, setUser] = useState(null);
+    const [post, setPost] = useState(null)
     async function GetProfile() {
         try {
             const res = await FetchProfile()
@@ -13,9 +16,18 @@ export default function ProfilePage() {
             console.error(error);
         }
     }
+    async function GetPost() {
+        try {
+            const res = await FetchPost()
+            setPost(res.mypost)
+        } catch (error) {
+            console.error(error);
+        }
+    }
     useEffect(() => {
         async function loadProfile() {
             await GetProfile()
+            await GetPost()
         }
         loadProfile()
     }, [])
@@ -59,11 +71,26 @@ export default function ProfilePage() {
 
                 {/* Divider */}
                 <hr className="my-8 border-gray-200 dark:border-neutral-800" />
-
-                {/* Posts Section Placeholder */}
-                <div className="text-center text-gray-500">
-                    No posts yet
+                <div className="grid grid-cols-3 gap-4">
+                    {post?.map((item, idx) => (
+                        <div
+                            key={idx}
+                            className="relative w-full aspect-square overflow-hidden rounded-lg bg-gray-200"
+                        >
+                            <Image
+                                src={item.imgUrl}
+                                alt="post image"
+                                fill
+                                className="object-cover"
+                            />
+                        </div>
+                    ))}
                 </div>
+                {post?.length === 0 && (
+                    <div className="text-center text-gray-500">
+                        No posts yet
+                    </div>
+                )}
 
             </div>
 

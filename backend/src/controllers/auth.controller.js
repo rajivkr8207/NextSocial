@@ -71,6 +71,9 @@ const ProfileController = async (req, res) => {
         user
     })
 }
+const userController = async (req, res) => {
+    return res.status(200).json({ user: req.user });
+}
 
 const LogoutController = (req, res) => {
     res.clearCookie('instatoken');
@@ -104,5 +107,6 @@ module.exports = {
     ProfileController,
     LogoutController,
     AllUserDataFetch,
-    uniqueUserFetch
+    uniqueUserFetch,
+    userController
 }

@@ -1,18 +1,16 @@
 "use client";
 
-import { LoginUser } from "@/lib/auth";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const [form, setForm] = useState({
     username: "",
     password: "",
   });
-  const router = useRouter()
   const [loading, setLoading] = useState(false);
-
+  const { handlelogin } = useAuth()
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
@@ -20,16 +18,8 @@ export default function LoginPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
-    try {
-      const res = await LoginUser(form)
-      // toast.success(res.message)
-      router.push('/')
-      console.log(res);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+    await handlelogin(form)
+    setLoading(false);  
   }
 
   return (

@@ -4,11 +4,14 @@ const { FollowerController, UnFollowerController, FollowRequestAcceptRejControll
 
 const followerRouter = express.Router()
 
-followerRouter.post('/follow/:id', IdentifyUser, FollowerController)
-followerRouter.post('/unfollow/:id', IdentifyUser, UnFollowerController)
-followerRouter.get('/following', IdentifyUser, GetFollowRequestController)
+
+followerRouter.get('/request', IdentifyUser, GetFollowRequestController)
+followerRouter.patch('/request/accrej/:id', IdentifyUser, FollowRequestAcceptRejController)
+
+//user follow me 
 followerRouter.get('/myfollower', IdentifyUser, GetMyFollowerController)
-followerRouter.patch('/following', IdentifyUser, FollowRequestAcceptRejController)
+
+
 
 
 module.exports = followerRouter;

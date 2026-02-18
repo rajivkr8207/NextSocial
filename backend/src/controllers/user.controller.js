@@ -1,70 +1,76 @@
-const LikeModel = require("../models/like.model")
-const Postmodel = require("../models/post.model")
+const FollowerModel = require("../models/follower.model")
+const Usermodel = require("../models/user.model")
 
+const FollowerController = async (req, res) => {
+    const follower = req.user.id
+    const followeee = req.params.id
 
-
-const PostLikeController = async (req, res) => {
-    const userid = req.user.id
-    const postid = req.params.id
-
-    const postexits = await Postmodel.findOne({ _id: postid })
-
-    if (!postexits) {
-        return res.status(404).json({
-            message: 'post is not exist'
-        })
-    }
-    const alreadylike = await LikeModel.findOne({
-        post: postid,
-        user: userid
-    })
-
-    if (alreadylike) {
+    const userexist = await Usermodel.findOne({ _id: followeee })
+    if (!userexist) {
         return res.status(409).json({
-            message: 'like already exist'
+            message: 'user is not exist'
         })
     }
-    const like = await LikeModel.create({
-        post: postid,
-        user: userid
-    })
 
+    const alreadyfollower = await FollowerModel.findOne({
+        follower: follower,
+        followee: followeee,
+    })
+    if (alreadyfollower) {
+        return res.status(200).json({
+            message: 'you are already following '
+        })
+    }
+
+    const followerr = await FollowerModel.create({
+        follower: follower,
+        followee: followeee,
+    })
     return res.status(201).json({
-        message: "you are like post",
-        like
+        message: `${follower} id following ${followeee}`,
+        followerr
     })
-
 }
 
-const PostUnLikeController = async (req, res) => {
-    const userid = req.user.id
-    const postid = req.params.id
-
-    const postexits = await Postmodel.findOne({ _id: postid })
-
-    if (!postexits) {
-        return res.status(404).json({
-            message: 'post is not exist'
+const UnFollowerController = async (req, res) => {
+    const follower = req.user.id
+    const followeee = req.params.id
+    const userexist = await Usermodel.findOne({ _id: followeee })
+    if (!userexist) {
+        return res.status(409).json({
+            message: 'user is not exist'
         })
     }
 
-    const like = await LikeModel.findOne({
-        post: postid,
-        user: userid
+    const alreadyfollower = await FollowerModel.findOne({
+        follower: follower,
+        followee: followeee,
     })
-    if (!like) {
-        return res.status(404).json({
-            message: 'like is not exist'
+    if (!alreadyfollower) {
+        return res.status(409).json({
+            message: 'you are not following'
         })
     }
-    await LikeModel.findByIdAndDelete(like.id)
+    await FollowerModel.findByIdAndDelete({ _id: alreadyfollower._id })
 
+    return res.status(201).json({
+        message: 'you are unfollow'
+    })
+}
+
+const FetchAllUserController = async (req, res) => {
+    const myid = req.user.id
+    const allUser = await Usermodel.find({
+        _id:{ $ne: myid}
+    })
     return res.status(200).json({
-        message: "you are unlike the post",
+        message: "user is fetch succfully",
+        allUser
     })
 }
 
 module.exports = {
-    PostLikeController,
-    PostUnLikeController
+    FollowerController,
+    UnFollowerController,
+    FetchAllUserController
 }
