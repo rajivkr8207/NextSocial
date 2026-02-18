@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "NextGram",
-  description: "NextGram make using Next js",
+  title: "NextSocial",
+  description: "NextSocial ",
 };
 
 export default function RootLayout({ children }) {

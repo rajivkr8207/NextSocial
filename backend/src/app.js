@@ -13,7 +13,7 @@ const UserRouter = require('./routes/user.route')
 app.use(express.json())
 app.use(morgan('dev'))
 app.use(cookieParser())
-app.use(express.static('./public/front'))
+app.use(express.static('./public/frontend'))
 app.use(cors({
     origin: ['http://localhost:3000'],
     credentials: true
