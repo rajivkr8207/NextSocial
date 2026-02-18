@@ -27,13 +27,13 @@ export default function Sidebar() {
       btn: false,
       icon: Home
     },
-    // {
-    //   name: "Create",
-    //   path: "/create",
-    //   isauth: true,
-    //   btn: false,
-    //   icon: PlusSquare
-    // },
+    {
+      name: "Create",
+      path: "/createpost",
+      isauth: true,
+      btn: false,
+      icon: PlusSquare
+    },
     {
       name: "Explore",
       path: "/explore",

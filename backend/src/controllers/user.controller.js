@@ -1,4 +1,5 @@
 const FollowerModel = require("../models/follower.model")
+const Postmodel = require("../models/post.model")
 const Usermodel = require("../models/user.model")
 
 const FollowerController = async (req, res) => {
@@ -69,8 +70,32 @@ const FetchAllUserController = async (req, res) => {
     })
 }
 
+const FetchUserByIdController = async (req, res) => {
+    const id = req.params.id
+    const User = await Usermodel.findById(id)
+    const post = await Postmodel.find({
+        user: id
+    })
+
+    const follower = await FollowerModel.find({
+        followee: id,
+        status:"accept"
+    })
+    const following = await FollowerModel.find({
+        follower: id
+    })
+    return res.status(200).json({
+        message: "user is fetch succfully",
+        User,
+        post,
+        follower,
+        following
+    })
+}
+
 module.exports = {
     FollowerController,
     UnFollowerController,
-    FetchAllUserController
+    FetchAllUserController,
+    FetchUserByIdController
 }

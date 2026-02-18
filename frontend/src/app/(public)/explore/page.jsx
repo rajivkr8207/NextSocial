@@ -44,7 +44,7 @@ const Explore = () => {
 
     return (
         <>
-            <div className='lg:w-6/12 md:w-8/12 w-12/12 mx-auto'>
+            <div className='lg:w-6/12 md:w-8/12 w-12/12 mx-auto flex flex-col gap-6'>
 
                 {User?.map((item, idx) => {
                     return (

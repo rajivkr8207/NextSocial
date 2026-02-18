@@ -2,9 +2,11 @@
 
 import { FollowUser, UnFollowUser } from "@/lib/follower";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 export default function UserCard({ user, refreshUsers }) {
+  const router = useRouter()
   async function Follow(id) {
     try {
       if (user.status === "accept") {
@@ -22,17 +24,15 @@ export default function UserCard({ user, refreshUsers }) {
       console.error(error);
     }
   }
-
   return (
     <div className="flex items-center justify-between p-4 bg-white dark:bg-neutral-900 rounded-lg shadow-sm">
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 " onClick={() => router.push(`profile/${user._id}`)}>
 
         <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-200">
-          <Image
+          <img
             src={user?.profile_image}
             alt="profile"
-            fill
             className="object-cover"
           />
         </div>

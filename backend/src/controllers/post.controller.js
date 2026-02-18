@@ -11,12 +11,10 @@ const client = new ImageKit({
 const CreatePostController = async (req, res) => {
     const { caption } = req.body
     const file = req.file
-
     const imgurl = await client.files.upload({
         file: await toFile(Buffer.from(file.buffer), 'file'),
         fileName: 'test',
     });
-
     const post = await Postmodel.create({
         caption,
         user: req.user.id,
@@ -30,12 +28,34 @@ const CreatePostController = async (req, res) => {
 
 
 const GetPostController = async (req, res) => {
-    const Allpost = await Postmodel.find()
-    return res.status(200).json({
-        message: 'post is fetch successfully',
-        Allpost
-    })
-}
+    try {
+
+        const posts = await Postmodel.find()
+            .populate("user", "username fullname profile_image")
+            .sort({ createdAt: -1 });
+        const likes = await LikeModel.find();
+
+        // Create Set of postIds liked by current user
+        const likedPostSet = new Set(
+            likes.map(like => like.post.toString())
+        );
+        console.log(likedPostSet);
+        const finalPosts = posts.map(post => ({
+            ...post._doc,
+            // likesCount: post.likes.length,   // if post has likes array
+            isLiked: likedPostSet.has(post._id.toString())
+        }));
+
+        return res.status(200).json({
+            message: "Posts fetched successfully",
+            posts: finalPosts
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server error" });
+    }
+};
 
 const GetMyPostController = async (req, res) => {
     const mypost = await Postmodel.find({

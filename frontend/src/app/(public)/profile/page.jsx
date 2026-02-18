@@ -1,7 +1,7 @@
 "use client";
 
 import { FetchProfile } from "@/lib/auth";
-import { FetchPost } from "@/lib/posts";
+import { FetchMyPost } from "@/lib/posts";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -18,7 +18,7 @@ export default function ProfilePage() {
     }
     async function GetPost() {
         try {
-            const res = await FetchPost()
+            const res = await FetchMyPost()
             setPost(res.mypost)
         } catch (error) {
             console.error(error);
