@@ -12,14 +12,14 @@ export default function UserCard({ user, refreshUsers }) {
       if (user.status === "accept") {
         const res = await UnFollowUser(id);
         toast.success(res.message);
-        await refreshUsers();   // 👈 REFETCH
+        await refreshUsers();
         return;
       }
-
-      await FollowUser(id);
-      toast.success("Follow request sent");
-      await refreshUsers();     // 👈 REFETCH
-
+      if (!user.status) {
+        await FollowUser(id);
+        toast.success("Follow request sent");
+        await refreshUsers();
+      }
     } catch (error) {
       console.error(error);
     }
@@ -27,7 +27,7 @@ export default function UserCard({ user, refreshUsers }) {
   return (
     <div className="flex items-center justify-between p-4 bg-white dark:bg-neutral-900 rounded-lg shadow-sm">
 
-      <div className="flex items-center gap-4 " onClick={() => router.push(`profile/${user._id}`)}>
+      <div className="flex items-center gap-4 ">
 
         <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-200">
           <img
@@ -46,7 +46,6 @@ export default function UserCard({ user, refreshUsers }) {
 
       <button
         onClick={() => Follow(user._id)}
-        disabled={user.status === "accept" || user.status === "pending"}
         className={`px-4 py-1.5 rounded-lg text-sm font-medium transition
     ${user.status === "accept" || user.status === "pending"
             ? "border border-gray-400 text-gray-700 dark:text-gray-300"

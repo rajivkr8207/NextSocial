@@ -23,10 +23,10 @@ export default function Button({
     const colors = {
         primary:
             variant === "solid"
-                ? "bg-blue-600 hover:bg-blue-700 focus:ring-blue-500"
+                ? "bg-purple-600 hover:bg-purple-700 focus:ring-purple-500"
                 : variant === "outline"
-                    ? "border-blue-600 text-blue-600 hover:bg-blue-50"
-                    : "text-blue-600 hover:bg-blue-50",
+                    ? "border-purple-600 text-purple-600 hover:bg-purple-50"
+                    : "text-purple-600 hover:bg-purple-50",
 
         secondary:
             variant === "solid"

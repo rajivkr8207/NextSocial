@@ -82,7 +82,8 @@ const FetchUserByIdController = async (req, res) => {
         status:"accept"
     })
     const following = await FollowerModel.find({
-        follower: id
+        follower: id,
+        status: "accept"
     })
     return res.status(200).json({
         message: "user is fetch succfully",

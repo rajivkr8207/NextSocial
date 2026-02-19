@@ -7,6 +7,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function RegisterPage() {
+
   const [form, setForm] = useState({
     fullname: "",
     username: "",
@@ -14,49 +15,51 @@ export default function RegisterPage() {
     password: "",
     bio: "",
   });
-  const router = useRouter()
 
-  // const [image, setImage] = useState(null);
-  // const [preview, setPreview] = useState(null);
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: "" });
   }
 
-  // function handleImage(e) {
-  //   const file = e.target.files[0];
-  //   setImage(file);
+  function validate() {
+    const newErrors = {};
 
-  //   if (file) {
-  //     setPreview(URL.createObjectURL(file));
-  //   }
-  // }
+    if (form.fullname.length < 6)
+      newErrors.fullname = "Full name must be at least 6 characters";
+
+    if (form.username.length < 6)
+      newErrors.username = "Username must be at least 6 characters";
+
+    if (!form.email.includes("@"))
+      newErrors.email = "Enter a valid email";
+
+    if (form.password.length < 4)
+      newErrors.password = "Password must be at least 4 characters";
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
+
+    if (!validate()) return;
+
     setLoading(true);
     try {
-      const res = await RegisterUser(form)
-      toast.success(res.message)
-      router.push('/login')
+      const res = await RegisterUser(form);
+      toast.success(res.message);
+      router.push("/login");
     } catch (error) {
       console.error(error);
-    }finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
-    // const data = new FormData();
-    // Object.entries(form).forEach(([key, value]) =>
-    //   data.append(key, value)
-    // );
-    // data.append("profileImage", image);
-
-    // Example API call
-    // await fetch("/api/register", { method: "POST", body: data });
-
-    // console.log("Register Data Submitted");
-    // console.log(form);
-    // console.log(image);
   }
 
   return (
@@ -71,79 +74,78 @@ export default function RegisterPage() {
           Create Account
         </h1>
 
-        {/* Profile Image */}
-        {/* <div className="flex flex-col items-center gap-2">
-          <div className="h-24 w-24 rounded-full overflow-hidden bg-gray-200">
-            {preview ? (
-              <img
-                src={preview}
-                alt="preview"
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <div className="h-full w-full flex items-center justify-center text-sm text-gray-500">
-                Photo
-              </div>
-            )}
-          </div>
-
+        {/* Fullname */}
+        <div>
           <input
-            type="file"
-            accept="image/*"
-            onChange={handleImage}
-            className="text-sm"
+            type="text"
+            name="fullname"
+            placeholder="Full Name"
+            value={form.fullname}
+            onChange={handleChange}
+            className="input"
           />
-        </div> */}
+          {errors.fullname && (
+            <p className="text-red-500 text-sm">{errors.fullname}</p>
+          )}
+        </div>
 
-        {/* Inputs */}
-        <input
-          type="text"
-          name="fullname"
-          placeholder="Full Name"
-          value={form.fullname}
-          onChange={handleChange}
-          required
-          className="input"
-        />
+        {/* Username */}
+        <div>
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={form.username}
+            onChange={handleChange}
+            className="input"
+          />
+          {errors.username && (
+            <p className="text-red-500 text-sm">{errors.username}</p>
+          )}
+        </div>
 
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={form.username}
-          onChange={handleChange}
-          required
-          className="input"
-        />
+        {/* Email */}
+        <div>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            className="input"
+          />
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email}</p>
+          )}
+        </div>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          required
-          className="input"
-        />
+        {/* Password */}
+        <div>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            className="input"
+          />
+          {errors.password && (
+            <p className="text-red-500 text-sm">{errors.password}</p>
+          )}
+        </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          required
-          className="input"
-        />
-
-        <textarea
-          name="bio"
-          placeholder="Bio"
-          rows="3"
-          value={form.bio}
-          onChange={handleChange}
-          className="input resize-none"
-        />
+        {/* Bio */}
+        <div>
+          <textarea
+            name="bio"
+            placeholder="Bio"
+            rows="3"
+            value={form.bio}
+            onChange={handleChange}
+            className="input resize-none"
+          />
+          
+        </div>
 
         {/* Submit */}
         <Button
@@ -153,6 +155,7 @@ export default function RegisterPage() {
         >
           {loading ? "Creating..." : "Register"}
         </Button>
+
         <p className="text-sm text-center">
           Already have an account?{" "}
           <a href="/login" className="text-blue-600">
@@ -161,6 +164,7 @@ export default function RegisterPage() {
         </p>
 
       </form>
+
     </div>
   );
 }

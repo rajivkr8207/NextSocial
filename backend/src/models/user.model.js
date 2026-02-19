@@ -28,7 +28,7 @@ const UserScheme = new mongoose.Schema({
         default: 'https://ik.imagekit.io/rjdev/defaultprofile.jpg'
     }
     
-})
+}, {timestamps: true})
 
 const Usermodel = mongoose.model('User',UserScheme)
 module.exports = Usermodel

@@ -26,24 +26,31 @@ const CreatePostController = async (req, res) => {
     })
 }
 
-
 const GetPostController = async (req, res) => {
     try {
-
         const posts = await Postmodel.find()
             .populate("user", "username fullname profile_image")
             .sort({ createdAt: -1 });
+
         const likes = await LikeModel.find();
 
-        // Create Set of postIds liked by current user
-        const likedPostSet = new Set(
-            likes.map(like => like.post.toString())
+        const likeCountMap = {};
+
+        likes.forEach(like => {
+            const postId = like.post.toString();
+            likeCountMap[postId] = (likeCountMap[postId] || 0) + 1;
+        });
+
+        const userLikedSet = new Set(
+            likes
+                .filter(like => like.user.toString() === req.user.id)
+                .map(like => like.post.toString())
         );
-        console.log(likedPostSet);
+
         const finalPosts = posts.map(post => ({
             ...post._doc,
-            // likesCount: post.likes.length,   // if post has likes array
-            isLiked: likedPostSet.has(post._id.toString())
+            likesCount: likeCountMap[post._id.toString()] || 0,
+            isLiked: userLikedSet.has(post._id.toString())
         }));
 
         return res.status(200).json({
@@ -56,6 +63,7 @@ const GetPostController = async (req, res) => {
         return res.status(500).json({ message: "Server error" });
     }
 };
+
 
 const GetMyPostController = async (req, res) => {
     const mypost = await Postmodel.find({

@@ -17,3 +17,7 @@ export const LikePost = async (id) => {
     const res = await api.post(`/post/like/${id}`)
     return res.data
 }
+export const UnLikePost = async (id) => {
+    const res = await api.post(`/post/unlike/${id}`)
+    return res.data
+}

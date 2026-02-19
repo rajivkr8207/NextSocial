@@ -1,5 +1,4 @@
 "use client";
-
 import { FetchProfile } from "@/lib/auth";
 import { FetchMyPost } from "@/lib/posts";
 import Image from "next/image";

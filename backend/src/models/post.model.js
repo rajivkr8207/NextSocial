@@ -10,13 +10,13 @@ const PostScheme = new mongoose.Schema({
         ref: "User",
         required: [true, "User id is required"],
     },
-    imgUrl:{
-        type:String,
+    imgUrl: {
+        type: String,
         required: [true, "imgurl is required"]
 
     }
-    
-})
 
-const Postmodel = mongoose.model('Post',PostScheme)
+}, {timestamps: true})
+
+const Postmodel = mongoose.model('Post', PostScheme)
 module.exports = Postmodel

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 
 export default function ImageUploader({setImage, preview, setPreview}) {
   const [dragActive, setDragActive] = useState(false);
@@ -25,7 +24,7 @@ export default function ImageUploader({setImage, preview, setPreview}) {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full ">
 
       <div
         onDragOver={(e) => {
@@ -34,7 +33,7 @@ export default function ImageUploader({setImage, preview, setPreview}) {
         }}
         onDragLeave={() => setDragActive(false)}
         onDrop={handleDrop}
-        className={`relative w-full h-72 border-2 border-dashed rounded-xl flex items-center justify-center transition
+        className={`relative w-full h-72 border-2 border-dashed overflow-hidden rounded-xl flex items-center justify-center transition
         ${
           dragActive
             ? "border-blue-500 bg-blue-50 dark:bg-neutral-800"
@@ -43,10 +42,9 @@ export default function ImageUploader({setImage, preview, setPreview}) {
       >
 
         {preview ? (
-          <Image
+          <img
             src={preview}
             alt="preview"
-            fill
             className="object-cover rounded-xl"
           />
         ) : (

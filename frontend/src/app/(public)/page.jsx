@@ -11,7 +11,6 @@ export default function FeedPage() {
 
   async function fetchPosts() {
     const res = await FetchAllPost()
-    // console.log(res);
     setPosts(res.posts);
   }
 
