@@ -59,7 +59,13 @@ const LoginController = async (req, res) => {
     res.cookie('instatoken', token)
     return res.status(200).json({
         message: "user login successfully",
-        token
+        token,
+        user:{
+            id: isUseralreadyexist._id,
+            username: isUseralreadyexist.username,
+            email: isUseralreadyexist.email,
+            fullname: isUseralreadyexist.fullname,
+        }
     })
 }
 
