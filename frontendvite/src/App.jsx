@@ -1,12 +1,13 @@
-import AppRoutes from "./AppRoutes"
+import { RouterProvider } from "react-router";
 import AuthProvider from "./features/auth/auth.context"
 import { ToastContainer } from 'react-toastify';
-import './style.scss'
+import { router } from "./app.routes";
+import './features/shared/global.scss'
 const App = () => {
   return (
     <>
       <AuthProvider>
-        <AppRoutes />
+        <RouterProvider router={router} />
         <ToastContainer />
       </AuthProvider>
     </>

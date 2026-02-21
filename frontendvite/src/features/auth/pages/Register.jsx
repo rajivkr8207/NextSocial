@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../style/Register.scss";
+import "../style/form.scss";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 
@@ -14,7 +14,7 @@ const Register = () => {
 
     const [error, setError] = useState("");
     const navigate = useNavigate()
-    const { handleRegister } = useAuth()
+    const { handleRegister, loading } = useAuth()
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -51,18 +51,17 @@ const Register = () => {
         setError("");
         await handleRegister(formData.username, formData.email, formData.fullname, formData.bio, formData.password)
         navigate('/login')
-        console.log("Register Data:", formData);
     };
 
     return (
-        <div className="register-container">
-            <form className="register-box" onSubmit={handleSubmit}>
+        <div className="form-container">
+            <form className="form-box" onSubmit={handleSubmit}>
                 <h2>Create Account</h2>
 
                 {error && <p className="error">{error}</p>}
 
                 <div className="input-group">
-                    <label>Full Name</label>
+                    {/* <label>Full Name</label> */}
                     <input
                         type="text"
                         name="fullname"
@@ -73,7 +72,7 @@ const Register = () => {
                 </div>
 
                 <div className="input-group">
-                    <label>Username</label>
+                    {/* <label>Username</label> */}
                     <input
                         type="text"
                         name="username"
@@ -84,7 +83,7 @@ const Register = () => {
                 </div>
 
                 <div className="input-group">
-                    <label>Email</label>
+                    {/* <label>Email</label> */}
                     <input
                         type="email"
                         name="email"
@@ -95,7 +94,7 @@ const Register = () => {
                 </div>
 
                 <div className="input-group">
-                    <label>Password</label>
+                    {/* <label>Password</label> */}
                     <input
                         type="password"
                         name="password"
@@ -106,7 +105,7 @@ const Register = () => {
                 </div>
 
                 <div className="input-group">
-                    <label>Bio</label>
+                    {/* <label>Bio</label> */}
                     <textarea
                         name="bio"
                         placeholder="Tell something about yourself"
@@ -116,9 +115,9 @@ const Register = () => {
                     />
                 </div>
 
-                <button type="submit">Register</button>
+                <button type="submit" disabled={loading}>{loading ?"loading...": 'Register'}</button>
 
-                <p className="login-text">
+                <p className="bottom-text">
                     Already have an account? <span>
                         <Link to={'/login'}>
                             Login

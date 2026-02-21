@@ -6,34 +6,21 @@ const api = axios.create({
 })
 
 export async function RegisterApi(username, email, fullname, bio, password) {
-    try {
-        const res = await api.post('/api/auth/register', {
-            username, email, fullname, bio, password
-        })
-        return res.data
-    } catch (error) {
-        console.error(error);
-    }
+    const res = await api.post('/api/auth/register', {
+        username, email, fullname, bio, password
+    })
+    return res.data
 }
 
 export async function loginApi(username, password) {
-    try {
-        const res = await api.post('/api/auth/login', {
-            username, password
-        })
-        return res.data
-    } catch (error) {
-        console.error(error);
-
-    }
+    const res = await api.post('/api/auth/login', {
+        username, password
+    })
+    return res.data
 }
 
 
 export async function Get_me() {
-    try {
-        const res = await api.get('/api/auth/profile')
-        return res.data
-    } catch (error) {
-        console.error(error);
-    }
+    const res = await api.get('/api/auth/profile')
+    return res.data
 }

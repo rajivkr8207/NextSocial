@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../style/login.scss";
+import "../style/form.scss";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 const Login = () => {
@@ -31,14 +31,14 @@ const Login = () => {
     };
 
     return (
-        <div className="login-container">
-            <form className="login-box" onSubmit={handleSubmit}>
+        <div className="form-container">
+            <form className="form-box" onSubmit={handleSubmit}>
                 <h2>Login</h2>
 
                 {error && <p className="error">{error}</p>}
 
                 <div className="input-group">
-                    <label>Username / Email</label>
+                    {/* <label>Username / Email</label> */}
                     <input
                         type="text"
                         name="username"
@@ -49,7 +49,7 @@ const Login = () => {
                 </div>
 
                 <div className="input-group">
-                    <label>Password</label>
+                    {/* <label>Password</label> */}
                     <input
                         type="password"
                         name="password"
@@ -59,9 +59,9 @@ const Login = () => {
                     />
                 </div>
 
-                <button disabled={loading} type="submit">{loading ? 'loading....':"Login"}</button>
+                <button disabled={loading} type="submit">{loading ? 'loading....' : "Login"}</button>
 
-                <p className="signup-text">
+                <p className="bottom-text">
                     Don't have an account? <span>
                         <Link to={'/register'}>
                             Register
