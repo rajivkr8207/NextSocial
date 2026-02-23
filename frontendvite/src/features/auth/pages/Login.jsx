@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../style/form.scss";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -8,7 +8,6 @@ const Login = () => {
         password: "",
     });
     const { handleLogin, loading } = useAuth();
-    const navigate = useNavigate()
     const [error, setError] = useState("");
 
     const handleChange = (e) => {
@@ -27,7 +26,6 @@ const Login = () => {
         }
         setError("");
         await handleLogin(formData.username, formData.password)
-        navigate('/')
     };
 
     return (
