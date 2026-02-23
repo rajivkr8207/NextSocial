@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -50,10 +49,9 @@ export default function PostCard({ post, onLike }) {
 
       {/* Post Image */}
       <div className="relative w-full aspect-square bg-gray-200">
-        <Image
+        <img
           src={post.imgUrl}
           alt="post"
-          fill
           className="object-cover"
         />
       </div>

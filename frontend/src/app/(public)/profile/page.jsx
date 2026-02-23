@@ -76,10 +76,9 @@ export default function ProfilePage() {
                             key={idx}
                             className="relative w-full aspect-square overflow-hidden rounded-lg bg-gray-200"
                         >
-                            <Image
+                            <img
                                 src={item.imgUrl}
                                 alt="post image"
-                                fill
                                 className="object-cover"
                             />
                         </div>
