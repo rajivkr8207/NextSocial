@@ -2,13 +2,18 @@ button {
     // width: 100%;
     padding-block: .6rem;
     padding-inline: 1.5rem;
-    background: #fb8246;
+    background: #f7502b;
     border: none;
     color: #fff;
     font-size: 16px;
     border-radius: 20px;
     cursor: pointer;
     transition: 0.3s ease;
+
+    &:hover {
+        background-color: #fb3d12;
+        opacity: 0.9;
+    }
 
     &:active {
         transform: scale(.9);

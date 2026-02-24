@@ -71,7 +71,21 @@
     }
   }
 }
+.post-bookmark-section{
+    display: flex;
+    gap: 1rem;
+    padding: 10px 0;
+    button{
+        padding: 10px 20px;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
 
+        &.active {
+          border: 2px solid #c5281a;
+            background-color: transparent;
+        }
+    }
+}
 /* POSTS GRID */
 
 .posts-grid {

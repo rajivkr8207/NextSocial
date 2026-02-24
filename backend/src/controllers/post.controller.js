@@ -3,6 +3,8 @@ const ImageKit = require('@imagekit/nodejs')
 const { toFile } = require('@imagekit/nodejs')
 const jwt = require('jsonwebtoken');
 const LikeModel = require("../models/like.model");
+const { Promise } = require("mongoose");
+const Bookmarkmodel = require("../models/bookmark.model");
 
 const client = new ImageKit({
     privateKey: process.env.IMAGE_KIT,
@@ -44,14 +46,14 @@ const DeletedPostController = async (req, res) => {
     })
 }
 
+// .sort({ createdAt: -1 })
 const GetPostController = async (req, res) => {
     try {
-        const posts = await Postmodel.find()
-            .populate("user", "username fullname profile_image")
-            .sort({ createdAt: -1 });
+       
+        const posts = await Postmodel.find().populate("user", "username fullname profile_image").sort({ createdAt: -1 });
 
         const likes = await LikeModel.find();
-
+        const Bookmark = await Bookmarkmodel.find({ user: req.user.id });
         const likeCountMap = {};
 
         likes.forEach(like => {
@@ -68,7 +70,8 @@ const GetPostController = async (req, res) => {
         const finalPosts = posts.map(post => ({
             ...post._doc,
             likesCount: likeCountMap[post._id.toString()] || 0,
-            isLiked: userLikedSet.has(post._id.toString())
+            isLiked: userLikedSet.has(post._id.toString()),
+            isBookmarked: Bookmark.some(bookmark => bookmark.post.toString() === post._id.toString())
         }));
 
         return res.status(200).json({

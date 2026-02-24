@@ -11,6 +11,7 @@ import {
     FaCompass,
     FaBell,
 } from "react-icons/fa";
+import { RiLogoutBoxFill } from "react-icons/ri";
 import { MdClose } from "react-icons/md";
 import { Link } from "react-router";
 import { useAuth } from "../../auth/hooks/useAuth";
@@ -68,7 +69,7 @@ const SideNavbar = () => {
                     </li>
                     <li onClick={() => handlelogout()}>
                         <Link to="/login">
-                            <FaPlusSquare />
+                            <RiLogoutBoxFill />
                             <span>Logout</span>
                         </Link>
                     </li>

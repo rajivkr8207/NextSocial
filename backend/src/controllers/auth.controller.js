@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt');
 const FollowerModel = require("../models/follower.model");
 const Postmodel = require("../models/post.model");
+const Bookmarkmodel = require("../models/bookmark.model");
 
 const RegisterController = async (req, res) => {
     const { fullname, username, email, password, bio } = req.body
@@ -80,6 +81,7 @@ const ProfileController = async (req, res) => {
         followee: id,
         status: "accept"
     })
+    const bookmark = await Bookmarkmodel.find({ user: id }).populate("post")
     const following = await FollowerModel.find({
         follower: id,
         status: "accept"
@@ -89,7 +91,8 @@ const ProfileController = async (req, res) => {
         user,
         post,
         follower,
-        following
+        following,
+        bookmark
     })
 }
 const userController = async (req, res) => {

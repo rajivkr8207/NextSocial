@@ -9,11 +9,14 @@ const Profile = () => {
   const [followers, setFollowers] = useState(0);
   const [following, setFollowing] = useState(0);
   const [posts, setPost] = useState(null)
+  const [bookmark, setBookmark] = useState(null)
   const { fetchUser } = useAuth()
 
   async function GetProfile() {
     try {
       const res = await fetchUser()
+      console.log(res);
+      setBookmark(res.bookmark)
       setUserdata(res.user)
       setFollowers(res.follower)
       setFollowing(res.following)
@@ -44,22 +47,17 @@ const Profile = () => {
   //   }
   // };
 
+  const [activeTab, setActiveTab] = useState("posts");
+
   return (
     <div className="profile-page">
       {/* Top Section */}
       <div className="profile-header">
         <div className="profile-img">
           <img
-            src={
-              userdata?.profile_image
-            }
+            src={userdata?.profile_image}
             alt="profile"
           />
-
-          {/* <label>
-            Change Photo
-            <input type="file" accept="image/*" onChange={handleProfileImage} />
-          </label> */}
         </div>
 
         <div className="profile-info">
@@ -80,18 +78,39 @@ const Profile = () => {
           <p className="fullname">{userdata?.fullname}</p>
           <p className="bio">{userdata?.bio}</p>
           <p className="email">{userdata?.email}</p>
-
-          {/* <button>Edit Profile</button> */}
         </div>
       </div>
 
+      <div className="post-bookmark-section">
+        <button
+          className={activeTab === "posts" ? "tab active" : "tab"}
+          onClick={() => setActiveTab("posts")}
+        >
+          My Posts
+        </button>
+        <button
+          className={activeTab === "saved" ? "tab active" : "tab"}
+          onClick={() => setActiveTab("saved")}
+        >
+          Saved
+        </button>
+      </div>
+
       <div className="posts-grid">
-        {posts?.map((img, index) => (
-          <div className="post" key={index}>
-            <button onClick={()=>handleDelectePost(img._id)}><FaTrash /> </button>
-            <img src={img?.imgUrl} alt="post" />
-          </div>
-        ))}
+        {activeTab === "posts"
+          ? posts?.map((img, index) => (
+              <div className="post" key={index}>
+                <button onClick={() => handleDelectePost(img._id)}>
+                  <FaTrash />
+                </button>
+                <img src={img?.imgUrl} alt="post" />
+              </div>
+            ))
+          : bookmark?.map((img, index) => (
+              <div className="post" key={index}>
+                <img src={img?.post.imgUrl} alt="saved" />
+              </div>
+            ))}
       </div>
     </div>
   );

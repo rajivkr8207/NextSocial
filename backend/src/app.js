@@ -9,6 +9,7 @@ const app = express()
 const PostRouter = require('./routes/post.route')
 const followerRouter = require('./routes/follower.route')
 const UserRouter = require('./routes/user.route')
+const BookMarkRouter = require('./routes/bookmark.route')
 
 app.use(express.json())
 app.use(morgan('dev'))
@@ -24,7 +25,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/post', PostRouter)
 app.use('/api/follower', followerRouter)
 app.use('/api/user', UserRouter)
-
+app.use('/api/bookmark', BookMarkRouter)
 
 
 

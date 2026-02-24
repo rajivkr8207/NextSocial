@@ -27,20 +27,25 @@ const UserCard = ({ user, FetchUser }) => {
 
   return (
     <>
-      <div className="user-card" key={user._id} >
-        <div onClick={()=>navigate(`/profile/${user._id}`)}>
+      <div className="user-card" key={user._id}>
 
-        <img src={user?.profile_image} alt="user" />
+        <div
+          className="user-info"
+          onClick={() => navigate(`/profile/${user._id}`)}
+        >
+          <img src={user?.profile_image} alt="user" />
 
-        <h4>{user?.username}</h4>
-        <p>{user?.fullname}</p>
+          <div>
+            <h4>{user?.username.slice(0, 10)}</h4>
+            <p>{user?.fullname}</p>
+          </div>
         </div>
 
         <button
           onClick={() => toggleFollow(user._id)}
           className={`${user.status === "accept" || user.status === "pending"
-            ? "unfollow"
-            : "follow"
+              ? "unfollow"
+              : "follow"
             }`}
         >
           {user.status === "pending" && "Requested"}
