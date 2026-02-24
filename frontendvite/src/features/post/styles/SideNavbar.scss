@@ -4,13 +4,12 @@
   height: 100vh;
   background: #000;
   color: #fff;
-  position: relative;
+  position: fixed;
   left: 0;
   top: 0;
   padding: 20px;
   transition: 0.3s;
 }
-
 .logo {
   font-size: 22px;
   margin-bottom: 40px;
@@ -50,17 +49,19 @@
 
 /* Mobile Button */
 .menu-btn {
-  display: none;
   position: fixed;
   top: 15px;
   left: 15px;
-  font-size: 22px;
-  background-color: rgb(238, 238, 238);
-  border-radius: 50%;
-  padding: .6rem .8rem;
-  color: #000;
   z-index: 1000;
-  cursor: pointer;
+  display: none;
+
+  svg{
+    font-size: 2.5rem;
+    border-radius: 50%;
+    padding: .5rem;
+    background-color: rgb(230, 230, 230);
+    color: rgb(15, 15, 15);
+  }
 }
 
 /* Responsive */

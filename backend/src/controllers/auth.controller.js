@@ -1,6 +1,8 @@
 const Usermodel = require("../models/user.model");
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt');
+const FollowerModel = require("../models/follower.model");
+const Postmodel = require("../models/post.model");
 
 const RegisterController = async (req, res) => {
     const { fullname, username, email, password, bio } = req.body
@@ -60,7 +62,7 @@ const LoginController = async (req, res) => {
     return res.status(200).json({
         message: "user login successfully",
         token,
-        user:{
+        user: {
             id: isUseralreadyexist._id,
             username: isUseralreadyexist.username,
             email: isUseralreadyexist.email,
@@ -71,10 +73,23 @@ const LoginController = async (req, res) => {
 
 
 const ProfileController = async (req, res) => {
-    const user = await Usermodel.findOne({ _id: req.user.id })
+    const id = req.user.id
+    const user = await Usermodel.findOne({ _id: id })
+    const post = await Postmodel.find({ user: id })
+    const follower = await FollowerModel.find({
+        followee: id,
+        status: "accept"
+    })
+    const following = await FollowerModel.find({
+        follower: id,
+        status: "accept"
+    })
     return res.status(200).json({
         message: "profile fetch successfully",
-        user
+        user,
+        post,
+        follower,
+        following
     })
 }
 const userController = async (req, res) => {

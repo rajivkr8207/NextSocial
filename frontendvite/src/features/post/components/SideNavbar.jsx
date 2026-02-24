@@ -8,17 +8,27 @@ import {
     FaInstagram,
     FaFacebook,
     FaTwitter,
+    FaCompass,
+    FaBell,
 } from "react-icons/fa";
+import { MdClose } from "react-icons/md";
 import { Link } from "react-router";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 const SideNavbar = () => {
     const [open, setOpen] = useState(false);
 
+    const { handlelogout } = useAuth()
+
+    if (open) {
+        window.addEventListener('mousedown', () => {
+            setOpen(false);
+        })
+    }
     return (
         <>
-            {/* Mobile Toggle */}
             <div className="menu-btn" onClick={() => setOpen(!open)}>
-                <FaBars />
+                {open ? <MdClose /> : <FaBars />}
             </div>
 
             <div className={`sidebar ${open ? "active" : ""}`}>
@@ -38,11 +48,28 @@ const SideNavbar = () => {
                             <span>Profile</span>
                         </Link>
                     </li>
-
+                    <li>
+                        <Link to="/explore">
+                            <FaCompass />
+                            <span>explore</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/notification">
+                            <FaBell />
+                            <span>Notificatiom</span>
+                        </Link>
+                    </li>
                     <li>
                         <Link to="/create">
                             <FaPlusSquare />
                             <span>Create Post</span>
+                        </Link>
+                    </li>
+                    <li onClick={() => handlelogout()}>
+                        <Link to="/login">
+                            <FaPlusSquare />
+                            <span>Logout</span>
                         </Link>
                     </li>
                 </ul>

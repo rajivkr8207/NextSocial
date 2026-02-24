@@ -1,15 +1,9 @@
-import axios from "axios";
-
-const api = axios.create({
-    baseURL: "http://localhost:8000",
-    withCredentials: true,
-})
+import api from "../../../helpers/api"
 
 
 
-
-export const FetchMyPost = async () => {
-    const res = await api.get('/post/mypost')
+export const FetchMyPost = async (id) => {
+    const res = await api.get(`/post/user/${id}`)
     return res.data
 }
 

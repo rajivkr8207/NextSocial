@@ -62,7 +62,7 @@ const UnFollowerController = async (req, res) => {
 const FetchAllUserController = async (req, res) => {
     const myid = req.user.id
     const allUser = await Usermodel.find({
-        _id:{ $ne: myid}
+        _id: { $ne: myid }
     })
     return res.status(200).json({
         message: "user is fetch succfully",
@@ -79,7 +79,7 @@ const FetchUserByIdController = async (req, res) => {
 
     const follower = await FollowerModel.find({
         followee: id,
-        status:"accept"
+        status: "accept"
     })
     const following = await FollowerModel.find({
         follower: id,

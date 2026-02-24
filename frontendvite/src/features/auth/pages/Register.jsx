@@ -16,6 +16,7 @@ const Register = () => {
     const navigate = useNavigate()
     const { handleRegister, loading } = useAuth()
     const handleChange = (e) => {
+        setError("");
         setFormData({
             ...formData,
             [e.target.name]: e.target.value,
@@ -26,11 +27,19 @@ const Register = () => {
         const { fullname, username, email, password } = formData;
 
         if (!fullname || !username || !email || !password) {
-            return "Please fill all required fields";
+            return "All required fields must be filled";
+        }
+
+        if (fullname.length < 4) {
+            return "Full name must be at least 4 characters";
+        }
+
+        if (username.length < 4) {
+            return "Username must be at least 4 characters";
         }
 
         if (!email.includes("@")) {
-            return "Invalid email format";
+            return "Please enter a valid email";
         }
 
         if (password.length < 6) {
@@ -68,6 +77,7 @@ const Register = () => {
                         placeholder="Enter full name"
                         value={formData.fullname}
                         onChange={handleChange}
+                        minLength={5}
                     />
                 </div>
 
@@ -79,6 +89,8 @@ const Register = () => {
                         placeholder="Enter username"
                         value={formData.username}
                         onChange={handleChange}
+                        minLength={5}
+
                     />
                 </div>
 
@@ -90,6 +102,8 @@ const Register = () => {
                         placeholder="Enter email"
                         value={formData.email}
                         onChange={handleChange}
+                        minLength={5}
+
                     />
                 </div>
 
@@ -101,6 +115,8 @@ const Register = () => {
                         placeholder="Enter password"
                         value={formData.password}
                         onChange={handleChange}
+                        minLength={5}
+
                     />
                 </div>
 
@@ -115,7 +131,7 @@ const Register = () => {
                     />
                 </div>
 
-                <button type="submit" disabled={loading}>{loading ?"loading...": 'Register'}</button>
+                <button type="submit" disabled={loading}>{loading ? "loading..." : 'Register'}</button>
 
                 <p className="bottom-text">
                     Already have an account? <span>

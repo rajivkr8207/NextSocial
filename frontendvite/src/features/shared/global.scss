@@ -20,11 +20,25 @@ a {
     text-decoration: none;
 }
 
-.PostLayout {
-    display: flex;
+.post-layout {
+  display: flex;
+}
 
-    .post_outlet {
-        width: 100%;
-        padding-block: 1rem;
-    }
+/* MAIN CONTENT */
+
+.post-outlet {
+  margin-left: 230px;   // same as sidebar width
+  width: calc(100% - 230px);
+  min-height: 100vh;
+  padding: 20px;
+  transition: 0.3s;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+  .post-outlet {
+    margin-left: 0;
+    width: 100%;
+  }
 }

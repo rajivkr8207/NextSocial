@@ -1,0 +1,68 @@
+.user-card {
+  background: #2f2f2f;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+
+  div {
+    width: full;
+    height: full;
+  }
+
+  img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+
+  h4 {
+    margin: 5px 0;
+  }
+
+  p {
+    color: gray;
+    font-size: 14px;
+  }
+
+  button {
+    margin-top: 10px;
+    padding: 7px 18px;
+    border-radius: 8px;
+    border: none;
+    background: #0095f6;
+    color: #fff;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  .unfollow {
+    background: #ddd;
+    color: #000;
+  }
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+  .user-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .user-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 400px) {
+  .user-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

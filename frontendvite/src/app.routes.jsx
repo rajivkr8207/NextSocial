@@ -5,33 +5,67 @@ import Home from './features/post/pages/Home'
 import PostLayout from './features/post/PostLayout'
 import CreatePost from './features/post/pages/CreatePost'
 import Profile from './features/auth/pages/Profile'
-
-
+import Explore from './features/user/pages/Explore'
+import UserLayout from './features/user/UserLayout'
+import Notifications from './features/user/pages/Notifcation'
+import PublicRoute from './routes/PublicRoute'
+import ProtectedRoute from './routes/ProtectedRoute'
+import UserProfile from './features/user/pages/UserProfile'
 export const router = createBrowserRouter([
+  // ---------- PUBLIC ----------
   {
-    path: "/login",
-    element: <Login />
-  },
-  {
-    path: "/register",
-    element: <Register />
-  },
-  {
-    path: "/",
-    element: <PostLayout />,
+    element: <PublicRoute />,
     children: [
       {
-        path:"",
-        element: <Home />
+        path: "/login",
+        element: <Login />
       },
       {
-        path:"create",
-        element: <CreatePost />
-      },
-      {
-        path:"profile",
-        element: <Profile />
+        path: "/register",
+        element: <Register />
       }
     ]
   },
+
+  // ---------- PROTECTED ----------
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "/",
+        element: <PostLayout />,
+        children: [
+          {
+            index: true,
+            element: <Home />
+          },
+          {
+            path: "create",
+            element: <CreatePost />
+          },
+          {
+            path: "profile",
+            element: <Profile />
+          },
+          {
+            element: <UserLayout />,
+            children: [
+              {
+                path: "explore",
+                element: <Explore />
+              },
+              {
+                path: "notification",
+                element: <Notifications />
+              },
+              {
+                path: "profile/:id",
+                element: <UserProfile />
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 ])

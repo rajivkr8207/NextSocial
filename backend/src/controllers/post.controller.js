@@ -13,7 +13,8 @@ const CreatePostController = async (req, res) => {
     const file = req.file
     const imgurl = await client.files.upload({
         file: await toFile(Buffer.from(file.buffer), 'file'),
-        fileName: 'test',
+        fileName: `post_${Date.now()}`,
+        folder: "/instaclone/post"
     });
     const post = await Postmodel.create({
         caption,

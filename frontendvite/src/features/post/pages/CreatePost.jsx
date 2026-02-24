@@ -1,11 +1,14 @@
-import  { useState } from "react";
+import { useState } from "react";
 import "../styles/CreatePost.scss";
+import { CreateMyPost } from "../services/post.api";
+import { useNavigate } from "react-router";
+import { toast } from "react-toastify"
 
 const CreatePost = () => {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [caption, setCaption] = useState("");
-
+  const navigate = useNavigate();
   // Image select handler
   const handleImage = (e) => {
     const file = e.target.files[0];
@@ -17,7 +20,7 @@ const CreatePost = () => {
   };
 
   // Submit handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!image || !caption) {
@@ -26,19 +29,20 @@ const CreatePost = () => {
     }
 
     const formData = new FormData();
-    formData.append("image", image);
+    formData.append("imageurl", image);
     formData.append("caption", caption);
+    if (image.size < 2000000) {
+      await CreateMyPost(formData)
+      toast.success("Post created successfully");
+      setCaption("");
+      setImage(null);
+      setPreview(null);
+      navigate('/')
 
-    console.log("Post Data:", {
-      image,
-      caption,
-    });
+    } else {
+      toast.error('please make image size less then 2mb')
+    }
 
-    // alert("Post Created Successfully!");
-
-    // setImage(null);
-    // setPreview(null);
-    // setCaption("");
   };
 
   return (
