@@ -9,6 +9,7 @@ const CreatePost = () => {
   const [preview, setPreview] = useState(null);
   const [caption, setCaption] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
   // Image select handler
   const handleImage = (e) => {
     const file = e.target.files[0];
@@ -22,7 +23,7 @@ const CreatePost = () => {
   // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true)
     if (!image || !caption) {
       alert("Please add image and caption");
       return;
@@ -42,7 +43,7 @@ const CreatePost = () => {
     } else {
       toast.error('please make image size less then 2mb')
     }
-
+    setLoading(false)
   };
 
   return (
@@ -70,7 +71,7 @@ const CreatePost = () => {
         />
 
         {/* Button */}
-        <button type="submit">Post</button>
+        <button type="submit" disabled={loading}>Post</button>
       </form>
     </div>
   );

@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const { CreatePostController, GetPostController, GetPostUsingParams, PostLikeController, PostUnLikeController, GetMyPostController } = require('../controllers/post.controller');
+const { CreatePostController, GetPostController, GetPostUsingParams, PostLikeController, PostUnLikeController, GetMyPostController, DeletedPostController } = require('../controllers/post.controller');
 const IdentifyUser = require('../middleware/auth.middleware');
 const PostRouter = express.Router()
 const upload = multer({ storage: multer.memoryStorage() })
@@ -11,7 +11,7 @@ PostRouter.get('/', IdentifyUser, GetPostController)
 
 PostRouter.get('/mypost', IdentifyUser, GetMyPostController)
 PostRouter.get('/:id', IdentifyUser, GetPostUsingParams)
-
+PostRouter.delete('/:id', IdentifyUser, DeletedPostController)
 
 /**
  * like post api/post/like/:id

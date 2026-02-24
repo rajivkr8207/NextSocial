@@ -27,6 +27,23 @@ const CreatePostController = async (req, res) => {
     })
 }
 
+const DeletedPostController = async (req, res) => {
+    const id = req.params.id
+    const post = await Postmodel.findOneAndDelete({
+        _id: id,
+        user: req.user.id
+    })
+    if (!post) {
+        return res.status(404).json({
+            message: 'post is not exist'
+        })
+    }
+    return res.status(200).json({
+        message: 'post is deleted successfully',
+        post
+    })
+}
+
 const GetPostController = async (req, res) => {
     try {
         const posts = await Postmodel.find()
@@ -157,5 +174,6 @@ module.exports = {
     GetPostUsingParams,
     PostLikeController,
     PostUnLikeController,
-    GetMyPostController
+    GetMyPostController,
+    DeletedPostController
 }

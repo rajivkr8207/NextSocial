@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "../style/profile.scss";
 import { useAuth } from "../hooks/useAuth";
-import { FetchMyPost } from "../../post/services/post.api";
-
+import { DeletedMyPost, FetchMyPost } from "../../post/services/post.api";
+import { FaTrash } from "react-icons/fa";
 const Profile = () => {
   // const [profileImg, setProfileImg] = useState(null);
   const [userdata, setUserdata] = useState(null);
@@ -29,7 +29,14 @@ const Profile = () => {
     }
     loadProfile()
   }, [])
-
+  const handleDelectePost = async (id) => {
+    try {
+      await DeletedMyPost(id)
+      await GetProfile()
+    } catch (error) {
+      console.error(error);
+    }
+  }
   // const handleProfileImage = (e) => {
   //   const file = e.target.files[0];
   //   if (file) {
@@ -81,6 +88,7 @@ const Profile = () => {
       <div className="posts-grid">
         {posts?.map((img, index) => (
           <div className="post" key={index}>
+            <button onClick={()=>handleDelectePost(img._id)}><FaTrash /> </button>
             <img src={img?.imgUrl} alt="post" />
           </div>
         ))}

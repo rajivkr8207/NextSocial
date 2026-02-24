@@ -83,6 +83,25 @@
 .post {
   width: 100%;
   aspect-ratio: 1/1;
+  position: relative;
+
+  button{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0,0,0,0.5);
+    border: none;
+    color: #fff;
+    padding: 5px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-block;
+    width: 25px;
+
+    &:hover {
+      background: rgba(0,0,0,0.7);
+    }
+  }
 
   img {
     width: 100%;

@@ -6,7 +6,10 @@ export const FetchMyPost = async (id) => {
     const res = await api.get(`/post/user/${id}`)
     return res.data
 }
-
+export const DeletedMyPost = async (id) => {
+    const res = await api.delete(`/post/${id}`)
+    return res.data
+}
 export const FetchAllPost = async () => {
     const res = await api.get('/post')
     return res.data
