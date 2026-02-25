@@ -1,48 +1,28 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "../styles/Explore.scss";
 import UseUser from "../hooks/UseUser";
-import {
-  FetchAllUser,
-  FetchMyFollower,
-} from "../services/user.api";
 import UserCard from "../components/UserCard";
 
 const Explore = () => {
-  const { allUser, setallUser } = UseUser();
 
+  const { followers, following, other, FetchUser } = UseUser();
   const [activeTab, setActiveTab] = useState("Followers");
 
-  async function FetchUser() {
-    try {
-      const userdata = await FetchAllUser();
-      const followingdata = await FetchMyFollower();
-
-      const followingMap = new Map(
-        followingdata.follower.map((f) => [f.followee, f.status]),
-      );
-
-      const merged = userdata.allUser.map((u) => ({
-        ...u,
-        isFollowing: followingMap.has(u._id),
-        status: followingMap.get(u._id) || null,
-      }));
-      setallUser(merged);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  useEffect(() => {
-    async function loaduser() {
-      await FetchUser();
-    }
-    loaduser();
-  }, []);
-
+  const getUsersByTab = () => {
+    if (activeTab === "Followers") return followers;
+    if (activeTab === "Following") return following;
+    if (activeTab === "Other") return other;
+    return [];
+  };
+  console.log(getUsersByTab());
   return (
     <div className="explore-page">
-      <h2>Explore People (work in progress)</h2>
+
+      <h2>People</h2>
+
+      {/* Tabs */}
       <div className="explore-tabs">
+
         <button
           className={activeTab === "Followers" ? "active" : ""}
           onClick={() => setActiveTab("Followers")}
@@ -63,12 +43,21 @@ const Explore = () => {
         >
           Other
         </button>
+
       </div>
+
+      {/* Users Grid */}
       <div className="user-grid">
-        {allUser.map((user) => (
-          <UserCard user={user} key={user._id} FetchUser={FetchUser} />
+        {getUsersByTab().map((item) => (
+          <UserCard
+            key={item._id || item.followee?._id || item.follower?._id}
+            user={item}
+            FetchUser={FetchUser}
+            activeTab={activeTab}
+          />
         ))}
       </div>
+
     </div>
   );
 };

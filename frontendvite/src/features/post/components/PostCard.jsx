@@ -3,14 +3,14 @@ import { FaComment, FaHeart, FaPaperPlane, FaRegHeart } from 'react-icons/fa'
 import { CiBookmark } from "react-icons/ci";
 import { FaBookmark } from "react-icons/fa";
 import "../styles/PostCard.scss"
-import { usePost } from '../hooks/usePost'
 import { LikePost, UnLikePost } from '../services/post.api'
 import { useState } from 'react';
 import { CreateBookmark, DeleteBookmark } from '../services/bookmark.api';
-const PostCard = ({ post }) => {
-
-    const { posts, setposts } = usePost()
+import { useNavigate } from 'react-router';
+const PostCard = ({ post, posts, setposts }) => {
+    const navigate = useNavigate()
     const [likecount, setlikecount] = useState(post?.likesCount)
+
     const toggleLike = async (id) => {
         if (post.isLiked) {
             await UnLikePost(id)
@@ -41,18 +41,15 @@ const PostCard = ({ post }) => {
         <>
             <div className="post-card" key={post._id}>
 
-                {/* Header */}
-                <div className="post-header">
+                <div className="post-header" onClick={() => navigate(`/profile/${post?.user?._id}`)}>
                     <img src={post?.user?.profile_image} alt="user" />
                     <span>{post?.user?.username}</span>
                 </div>
 
-                {/* Image */}
                 <div className="post-image">
                     <img src={post?.imgUrl} alt="post" />
                 </div>
 
-                {/* Actions */}
                 <div className="post-actions">
                     <p>
                         {post.isLiked ? (
@@ -78,7 +75,6 @@ const PostCard = ({ post }) => {
                 </div>
 
 
-                {/* Caption */}
                 <div className="post-caption">
                     <b>{post?.user?.username}</b> {post?.caption}
                 </div>

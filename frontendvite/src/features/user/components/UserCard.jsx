@@ -1,61 +1,81 @@
 import { toast } from "react-toastify";
 import { FollowUser, UnFollowUser } from "../services/user.api";
-import "../styles/UserCard.scss"
+import "../styles/UserCard.scss";
 import { useNavigate } from "react-router";
 
-const UserCard = ({ user, FetchUser }) => {
-  const navigate = useNavigate()
+const UserCard = ({ user, FetchUser, activeTab }) => {
+  const navigate = useNavigate();
 
-  const toggleFollow = async (id) => {
+  const profileUser =
+    activeTab === "Followers"
+      ? user.follower
+      : activeTab === "Following"
+        ? user.followee
+        : user;
+
+  const userId = profileUser?._id;
+
+  const toggleFollow = async () => {
     try {
       if (user.status === "accept") {
-        const res = await UnFollowUser(id);
-        toast.success(res.message);
-        await FetchUser();
-        return;
-      }
-      if (!user.status) {
-        await FollowUser(id);
+        const res = await UnFollowUser(userId);
+        toast.success(res.message || "Unfollowed");
+      } else {
+        if (user.status === "pending") {
+          toast.info("Follow request already sent");
+          return;
+        }
+        if (user.status === "reject") {
+          toast.info("Follow request already rejected");
+          return;
+        }
+        await FollowUser(userId);
         toast.success("Follow request sent");
-        await FetchUser();
       }
+
+      await FetchUser();
     } catch (error) {
       console.error(error);
+      // toast.error("Something went wrong");
     }
-    console.log(id);
   };
 
   return (
-    <>
-      <div className="user-card" key={user._id}>
+    <div className="user-card">
 
-        <div
-          className="user-info"
-          onClick={() => navigate(`/profile/${user._id}`)}
-        >
-          <img src={user?.profile_image} alt="user" />
+      {/* USER INFO */}
+      <div
+        className="user-info"
+        onClick={() => navigate(`/profile/${userId}`)}
+      >
+        <img
+          src={profileUser?.profile_image}
+          alt="user"
+        />
 
-          <div>
-            <h4>{user?.username.slice(0, 10)}</h4>
-            <p>{user?.fullname}</p>
-          </div>
+        <div>
+          <h4>{profileUser?.username?.slice(0, 12)}</h4>
+          <p>{profileUser?.fullname}</p>
         </div>
-
-        <button
-          onClick={() => toggleFollow(user._id)}
-          className={`${user.status === "accept" || user.status === "pending"
-              ? "unfollow"
-              : "follow"
-            }`}
-        >
-          {user.status === "pending" && "Requested"}
-          {user.status === "accept" && "Following"}
-          {(user.status === null || user.status === "reject") && "Follow"}
-        </button>
-
       </div>
-    </>
-  )
-}
 
-export default UserCard
+      {/* BUTTON */}
+      <button
+        onClick={toggleFollow}
+        className={
+          user.status === "accept" || user.status === "pending"
+            ? "unfollow"
+            : "follow"
+        }
+      >
+        {user.status === "pending" && "Requested"}
+        {user.status === "accept" && "Following"}
+        {user.status === "reject" && "Rejected"}
+        {!user.status && "Follow"}
+      </button>
+
+    </div>
+  );
+};
+
+export default UserCard;

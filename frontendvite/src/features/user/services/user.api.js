@@ -1,7 +1,7 @@
 import api from "../../../helpers/api"
 
-export const FetchAllUser = async () => {
-    const res = await api.get('/user/alluser')
+export const FetchAllUser = async (page = 1, limit = 5) => {
+    const res = await api.get(`/user/alluser?page=${page}&limit=${limit}`)
     return res.data
 }
 
@@ -34,3 +34,29 @@ export const FollowReqAccRej = async (id, data) => {
     const res = await api.patch(`/follower/request/accrej/${id}`, data)
     return res.data
 }
+
+
+export const SearchUsers = async (query) => {
+    const res = await api.get(`/user/search?query=${query}`)
+    return res.data
+};
+
+export const FetchFollowerFollowingOther = async (page = 1, limit = 5) => {
+    const res = await api.get(`/post/followerfollowing?page=${page}&limit=${limit}`)
+    return res.data
+};
+
+export const FetchMyfollowers = async (page = 1, limit = 5) => {
+    const res = await api.get(`/post/followers?page=${page}&limit=${limit}`)
+    return res.data
+};
+
+export const FetchMyfolloing = async (page = 1, limit = 5) => {
+    const res = await api.get(`/post/following?page=${page}&limit=${limit}`)
+    return res.data
+};
+
+export const Fetchotheruser = async (page = 1, limit = 5) => {
+    const res = await api.get(`/post/others?page=${page}&limit=${limit}`)
+    return res.data
+};

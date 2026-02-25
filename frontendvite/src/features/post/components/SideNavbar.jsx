@@ -10,6 +10,7 @@ import {
     FaTwitter,
     FaCompass,
     FaBell,
+    FaSearch,
 } from "react-icons/fa";
 import { RiLogoutBoxFill } from "react-icons/ri";
 import { MdClose } from "react-icons/md";
@@ -33,7 +34,7 @@ const SideNavbar = () => {
             </div>
 
             <div className={`sidebar ${open ? "active" : ""}`}>
-                <h2 className="logo">SocialApp</h2>
+                <h2 className="logo">NextSocial</h2>
 
                 <ul>
                     <li>
@@ -53,6 +54,12 @@ const SideNavbar = () => {
                         <Link to="/explore">
                             <FaCompass />
                             <span>explore</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/search">
+                            <FaSearch />
+                            <span>Search</span>
                         </Link>
                     </li>
                     <li>

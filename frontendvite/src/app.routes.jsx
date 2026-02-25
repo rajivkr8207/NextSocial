@@ -11,6 +11,8 @@ import Notifications from './features/user/pages/Notifcation'
 import PublicRoute from './routes/PublicRoute'
 import ProtectedRoute from './routes/ProtectedRoute'
 import UserProfile from './features/user/pages/UserProfile'
+import Search from './features/user/pages/SearchUser'
+import PostDetails from './features/post/pages/PostDetails'
 export const router = createBrowserRouter([
   // ---------- PUBLIC ----------
   {
@@ -48,11 +50,19 @@ export const router = createBrowserRouter([
             element: <Profile />
           },
           {
+            path: "post/:id",
+            element: <PostDetails />
+          },
+          {
             element: <UserLayout />,
             children: [
               {
                 path: "explore",
                 element: <Explore />
+              },
+              {
+                path: "search",
+                element: <Search />
               },
               {
                 path: "notification",

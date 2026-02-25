@@ -1,22 +1,48 @@
-import React, { useContext } from 'react'
-import { UserContext } from '../user.context'
-import { FetchAllUser } from '../services/user.api'
+// hooks/UseUser.js
+import { useContext, useEffect, useRef, useCallback } from "react";
+import { UserContext } from "../user.context";
+import { FetchMyfolloing, FetchMyfollowers, Fetchotheruser } from "../services/user.api";
 
 const UseUser = () => {
-    const context = useContext(UserContext)
-    const { allUser, setallUser } = context
+  const { followers, setFollowers, following, setFollowing, other, setOther } = useContext(UserContext);
+  const firstLoad = useRef(true);
 
 
-    const fetchAllUsers = async () => {
-        try {
-            const res = await FetchAllUser()
-            console.log(res);
-            setallUser(res.allUser)
-        } catch (error) {
-            console.log(error)
-        }
+  const fetchMyFollowers = useCallback(async () => {
+    try {
+      const res = await FetchMyfollowers(1, 10);
+      setFollowers(res.followers);
+    } catch (error) {
+      console.error(error);
     }
-    return { allUser, setallUser, fetchAllUsers }
-}
+  }, []);
 
-export default UseUser
+  const fetchMyfollowing = useCallback(async () => {
+    try {
+      const res = await FetchMyfolloing(1, 10);
+      setFollowing(res.following);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  const fetchOtherUser = useCallback(async () => {
+    try {
+      const res = await Fetchotheruser(1, 10);
+      setOther(res.users);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!firstLoad.current) return;
+    firstLoad.current = false;
+    fetchMyFollowers();
+    fetchMyfollowing();
+    fetchOtherUser();
+  }, [fetchMyFollowers, fetchMyfollowing, fetchOtherUser]);
+  return { followers, following, other };
+};
+
+export default UseUser;

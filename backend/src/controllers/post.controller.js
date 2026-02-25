@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 const LikeModel = require("../models/like.model");
 const { Promise } = require("mongoose");
 const Bookmarkmodel = require("../models/bookmark.model");
+const Usermodel = require("../models/user.model");
+const FollowerModel = require("../models/follower.model");
 
 const client = new ImageKit({
     privateKey: process.env.IMAGE_KIT,
@@ -49,8 +51,14 @@ const DeletedPostController = async (req, res) => {
 // .sort({ createdAt: -1 })
 const GetPostController = async (req, res) => {
     try {
-       
-        const posts = await Postmodel.find().populate("user", "username fullname profile_image").sort({ createdAt: -1 });
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+        const skip = (page - 1) * limit;
+        const posts = await Postmodel.find()
+            .populate("user", "username fullname profile_image")
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
 
         const likes = await LikeModel.find();
         const Bookmark = await Bookmarkmodel.find({ user: req.user.id });
@@ -73,12 +81,16 @@ const GetPostController = async (req, res) => {
             isLiked: userLikedSet.has(post._id.toString()),
             isBookmarked: Bookmark.some(bookmark => bookmark.post.toString() === post._id.toString())
         }));
-
+        // Total count for frontend
+        const totalPosts = await Postmodel.countDocuments();
         return res.status(200).json({
             message: "Posts fetched successfully",
+            page,
+            limit,
+            totalPosts,
+            hasMore: skip + posts.length < totalPosts,
             posts: finalPosts
         });
-
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Server error" });
@@ -100,8 +112,7 @@ const GetPostUsingParams = async (req, res) => {
     const id = req.params.id
     const post = await Postmodel.findOne({
         _id: id,
-        user: req.user.id
-    })
+    }).populate("user", "username fullname profile_image")
     return res.status(200).json({
         message: 'post is fetch successfully',
         post
@@ -170,7 +181,153 @@ const PostUnLikeController = async (req, res) => {
     })
 }
 
+// controllers/user.controller.js
 
+const myFollowersController = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const userid = req.user.id;
+
+    // Who follows me
+    const followers = await FollowerModel.find({
+      followee: userid,
+      status: "accept"
+    })
+      .populate("follower", "username fullname profile_image")
+      .skip(skip)
+      .limit(limit);
+
+    // My outgoing follow records
+    const myFollowRecords = await FollowerModel.find({
+      follower: userid
+    });
+
+    const statusMap = new Map(
+      myFollowRecords.map(f => [
+        f.followee.toString(),
+        f.status
+      ])
+    );
+
+    const finalFollowers = followers.map(f => ({
+      ...f._doc,
+      status: statusMap.get(f.follower._id.toString()) || null
+    }));
+
+    const total = await FollowerModel.countDocuments({
+      followee: userid,
+      status: "accept"
+    });
+
+    return res.status(200).json({
+      message: "Followers fetched",
+      page,
+      limit,
+      hasMore: skip + finalFollowers.length < total,
+      followers: finalFollowers
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+const myFollowingController = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const userid = req.user.id;
+
+    const following = await FollowerModel.find({
+      follower: userid,
+      status: "accept"
+    })
+      .populate("followee", "username fullname profile_image")
+      .skip(skip)
+      .limit(limit);
+
+    const finalFollowing = following.map(f => ({
+      ...f._doc,
+      status: "accept"
+    }));
+
+    const total = await FollowerModel.countDocuments({
+      follower: userid,
+      status: "accept"
+    });
+
+    return res.status(200).json({
+      message: "Following fetched",
+      page,
+      limit,
+      hasMore: skip + finalFollowing.length < total,
+      following: finalFollowing
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+const otherUsersController = async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        const userid = req.user.id;
+
+        const myFollowRecords = await FollowerModel.find({
+            follower: userid
+        });
+
+        const followStatusMap = new Map(
+            myFollowRecords.map(f => [
+                f.followee.toString(),
+                f.status
+            ])
+        );
+
+        const followingIds = myFollowRecords
+            .filter(f => f.status === "accept")
+            .map(f => f.followee);
+
+        const users = await Usermodel.find({
+            _id: { $nin: [...followingIds, userid] }
+        })
+            .select("username fullname profile_image")
+            .skip(skip)
+            .limit(limit);
+
+        const total = await Usermodel.countDocuments({
+            _id: { $nin: [...followingIds, userid] }
+        });
+
+        const finalUsers = users.map(user => ({
+            ...user._doc,
+            status: followStatusMap.get(user._id.toString()) || null
+        }));
+
+        return res.status(200).json({
+            message: "Other users fetched",
+            page,
+            limit,
+            hasMore: skip + users.length < total,
+            users: finalUsers
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server error" });
+    }
+};
 module.exports = {
     CreatePostController,
     GetPostController,
@@ -178,5 +335,8 @@ module.exports = {
     PostLikeController,
     PostUnLikeController,
     GetMyPostController,
-    DeletedPostController
+    DeletedPostController,
+    myFollowersController,
+    myFollowingController,
+    otherUsersController
 }

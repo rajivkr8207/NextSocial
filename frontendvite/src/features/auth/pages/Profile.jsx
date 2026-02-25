@@ -3,6 +3,7 @@ import "../style/profile.scss";
 import { useAuth } from "../hooks/useAuth";
 import { DeletedMyPost, FetchMyPost } from "../../post/services/post.api";
 import { FaTrash } from "react-icons/fa";
+import { useNavigate } from "react-router";
 const Profile = () => {
   // const [profileImg, setProfileImg] = useState(null);
   const [userdata, setUserdata] = useState(null);
@@ -11,11 +12,10 @@ const Profile = () => {
   const [posts, setPost] = useState(null)
   const [bookmark, setBookmark] = useState(null)
   const { fetchUser } = useAuth()
-
+  const navigate = useNavigate()
   async function GetProfile() {
     try {
       const res = await fetchUser()
-      console.log(res);
       setBookmark(res.bookmark)
       setUserdata(res.user)
       setFollowers(res.follower)
@@ -107,7 +107,7 @@ const Profile = () => {
               </div>
             ))
           : bookmark?.map((img, index) => (
-              <div className="post" key={index}>
+              <div className="post" key={index} onClick={() => navigate(`/post/${img.post._id}`)}>
                 <img src={img?.post.imgUrl} alt="saved" />
               </div>
             ))}

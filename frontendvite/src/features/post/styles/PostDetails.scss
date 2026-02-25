@@ -1,0 +1,49 @@
+.post-details {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.post-card {
+  width: 400px;
+  background: #2e2e2e;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+
+  img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+  }
+}
+
+.post-img {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+
+  svg {
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+  .liked {
+    color: red;
+  }
+}
+
+p {
+  padding: 0 10px 15px;
+}

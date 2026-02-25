@@ -61,14 +61,71 @@ const UnFollowerController = async (req, res) => {
 
 const FetchAllUserController = async (req, res) => {
     const myid = req.user.id
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
     const allUser = await Usermodel.find({
+        _id: { $ne: myid }
+    })
+        .skip(skip)
+        .limit(limit)
+    const totalUser = await Usermodel.countDocuments({
         _id: { $ne: myid }
     })
     return res.status(200).json({
         message: "user is fetch succfully",
-        allUser
+        allUser,
+        totalUser,
+        hasMore: skip + allUser.length < totalUser
     })
 }
+
+// controllers/user.controller.js
+
+const SearchUserController = async (req, res) => {
+    try {
+        const { query } = req.query;
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        if (!query) {
+            return res.status(400).json({
+                message: "Search query is required"
+            });
+        }
+
+        // Case-insensitive username search
+        const users = await Usermodel.find({
+            username: { $regex: query, $options: "i" }
+        })
+            .select("username fullname profile_image")
+            .skip(skip)
+            .limit(limit);
+
+        const totalUsers = await Usermodel.countDocuments({
+            username: { $regex: query, $options: "i" }
+        });
+
+        return res.status(200).json({
+            message: "Users fetched successfully",
+            page,
+            limit,
+            totalUsers,
+            hasMore: skip + users.length < totalUsers,
+            users
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Server error"
+        });
+    }
+};
+
+
 
 const FetchUserByIdController = async (req, res) => {
     const id = req.params.id
@@ -98,5 +155,6 @@ module.exports = {
     FollowerController,
     UnFollowerController,
     FetchAllUserController,
-    FetchUserByIdController
+    FetchUserByIdController,
+    SearchUserController
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../styles/userprofile.scss";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { FetchUserById } from "../services/user.api";
 
 const UserProfile = () => {
@@ -9,7 +9,7 @@ const UserProfile = () => {
     const [followers, setFollowers] = useState(0);
     const [following, setFollowing] = useState(0);
     const [posts, setPost] = useState(null)
-
+    const router = useNavigate()
     async function GetProfile() {
         try {
             const res = await FetchUserById(id)
@@ -79,7 +79,7 @@ const UserProfile = () => {
 
             <div className="posts-grid">
                 {posts?.map((img, index) => (
-                    <div className="post" key={index}>
+                    <div className="post" key={index} onClick={() => router(`/post/${img._id}`)}>
                         <img src={img?.imgUrl} alt="post" />
                     </div>
                 ))}
