@@ -1,9 +1,9 @@
 .post-card {
-    background: #fff;
     border: 1px solid #ddd;
     border-radius: 10px;
     margin-bottom: 25px;
     margin-inline: auto;
+    max-width: 100%;
 }
 
 /* HEADER */
@@ -86,4 +86,10 @@
     text-align: start;
     padding: 0 10px 15px;
     font-size: 14px;
+}
+@media (max-width: 768px) {
+    .post-card {
+        width: 80%;
+    }
+    
 }

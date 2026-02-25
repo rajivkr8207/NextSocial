@@ -60,3 +60,14 @@ export const Fetchotheruser = async (page = 1, limit = 5) => {
     const res = await api.get(`/post/others?page=${page}&limit=${limit}`)
     return res.data
 };
+
+
+export const FetchReviews = async () => {
+    const res = await api.get(`/rating/all`)
+    return res.data
+};
+
+export const CreateReview = async (data) => {
+    const res = await api.post(`/rating/create`, data)
+    return res.data
+};

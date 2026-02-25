@@ -109,15 +109,40 @@ const GetMyPostController = async (req, res) => {
 }
 
 const GetPostUsingParams = async (req, res) => {
-    const id = req.params.id
-    const post = await Postmodel.findOne({
-        _id: id,
-    }).populate("user", "username fullname profile_image")
-    return res.status(200).json({
-        message: 'post is fetch successfully',
-        post
-    })
-}
+    try {
+        const id = req.params.id;
+        const userId = req.user.id;
+
+        const post = await Postmodel.findOne({
+            _id: id,
+        }).populate("user", "username fullname profile_image");
+
+        if (!post) {
+            return res.status(404).json({
+                message: "Post not found",
+            });
+        }
+
+        const isLiked = await LikeModel.findOne({
+            user: userId,
+            post: id,
+        });
+
+        return res.status(200).json({
+            message: "post is fetch successfully",
+            post: {
+                ...post._doc,
+                isLiked: !!isLiked,  
+            },
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Server error",
+        });
+    }
+};
 
 
 const PostLikeController = async (req, res) => {
@@ -184,96 +209,96 @@ const PostUnLikeController = async (req, res) => {
 // controllers/user.controller.js
 
 const myFollowersController = async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
 
-    const userid = req.user.id;
+        const userid = req.user.id;
 
-    // Who follows me
-    const followers = await FollowerModel.find({
-      followee: userid,
-      status: "accept"
-    })
-      .populate("follower", "username fullname profile_image")
-      .skip(skip)
-      .limit(limit);
+        // Who follows me
+        const followers = await FollowerModel.find({
+            followee: userid,
+            status: "accept"
+        })
+            .populate("follower", "username fullname profile_image")
+            .skip(skip)
+            .limit(limit);
 
-    // My outgoing follow records
-    const myFollowRecords = await FollowerModel.find({
-      follower: userid
-    });
+        // My outgoing follow records
+        const myFollowRecords = await FollowerModel.find({
+            follower: userid
+        });
 
-    const statusMap = new Map(
-      myFollowRecords.map(f => [
-        f.followee.toString(),
-        f.status
-      ])
-    );
+        const statusMap = new Map(
+            myFollowRecords.map(f => [
+                f.followee.toString(),
+                f.status
+            ])
+        );
 
-    const finalFollowers = followers.map(f => ({
-      ...f._doc,
-      status: statusMap.get(f.follower._id.toString()) || null
-    }));
+        const finalFollowers = followers.map(f => ({
+            ...f._doc,
+            status: statusMap.get(f.follower._id.toString()) || null
+        }));
 
-    const total = await FollowerModel.countDocuments({
-      followee: userid,
-      status: "accept"
-    });
+        const total = await FollowerModel.countDocuments({
+            followee: userid,
+            status: "accept"
+        });
 
-    return res.status(200).json({
-      message: "Followers fetched",
-      page,
-      limit,
-      hasMore: skip + finalFollowers.length < total,
-      followers: finalFollowers
-    });
+        return res.status(200).json({
+            message: "Followers fetched",
+            page,
+            limit,
+            hasMore: skip + finalFollowers.length < total,
+            followers: finalFollowers
+        });
 
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error" });
-  }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server error" });
+    }
 };
 
 const myFollowingController = async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
 
-    const userid = req.user.id;
+        const userid = req.user.id;
 
-    const following = await FollowerModel.find({
-      follower: userid,
-      status: "accept"
-    })
-      .populate("followee", "username fullname profile_image")
-      .skip(skip)
-      .limit(limit);
+        const following = await FollowerModel.find({
+            follower: userid,
+            status: "accept"
+        })
+            .populate("followee", "username fullname profile_image")
+            .skip(skip)
+            .limit(limit);
 
-    const finalFollowing = following.map(f => ({
-      ...f._doc,
-      status: "accept"
-    }));
+        const finalFollowing = following.map(f => ({
+            ...f._doc,
+            status: "accept"
+        }));
 
-    const total = await FollowerModel.countDocuments({
-      follower: userid,
-      status: "accept"
-    });
+        const total = await FollowerModel.countDocuments({
+            follower: userid,
+            status: "accept"
+        });
 
-    return res.status(200).json({
-      message: "Following fetched",
-      page,
-      limit,
-      hasMore: skip + finalFollowing.length < total,
-      following: finalFollowing
-    });
+        return res.status(200).json({
+            message: "Following fetched",
+            page,
+            limit,
+            hasMore: skip + finalFollowing.length < total,
+            following: finalFollowing
+        });
 
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error" });
-  }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server error" });
+    }
 };
 
 const otherUsersController = async (req, res) => {

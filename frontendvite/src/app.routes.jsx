@@ -13,6 +13,8 @@ import ProtectedRoute from './routes/ProtectedRoute'
 import UserProfile from './features/user/pages/UserProfile'
 import Search from './features/user/pages/SearchUser'
 import PostDetails from './features/post/pages/PostDetails'
+import Chat from './features/chating/pages/Chat'
+import Review from './features/user/pages/Review'
 export const router = createBrowserRouter([
   // ---------- PUBLIC ----------
   {
@@ -61,12 +63,20 @@ export const router = createBrowserRouter([
                 element: <Explore />
               },
               {
+                path: "chat",
+                element: <Chat />
+              },
+              {
                 path: "search",
                 element: <Search />
               },
               {
                 path: "notification",
                 element: <Notifications />
+              },
+              {
+                path: "feedback",
+                element: <Review />
               },
               {
                 path: "profile/:id",

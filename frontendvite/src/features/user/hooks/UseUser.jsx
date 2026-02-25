@@ -42,7 +42,7 @@ const UseUser = () => {
     fetchMyfollowing();
     fetchOtherUser();
   }, [fetchMyFollowers, fetchMyfollowing, fetchOtherUser]);
-  return { followers, following, other };
+  return { followers, following, other,fetchOtherUser };
 };
 
 export default UseUser;

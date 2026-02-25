@@ -5,7 +5,7 @@ import UserCard from "../components/UserCard";
 
 const Explore = () => {
 
-  const { followers, following, other, FetchUser } = UseUser();
+  const { followers, following, other, fetchOtherUser } = UseUser();
   const [activeTab, setActiveTab] = useState("Followers");
 
   const getUsersByTab = () => {
@@ -14,7 +14,6 @@ const Explore = () => {
     if (activeTab === "Other") return other;
     return [];
   };
-  console.log(getUsersByTab());
   return (
     <div className="explore-page">
 
@@ -52,7 +51,7 @@ const Explore = () => {
           <UserCard
             key={item._id || item.followee?._id || item.follower?._id}
             user={item}
-            FetchUser={FetchUser}
+            FetchUser={fetchOtherUser}
             activeTab={activeTab}
           />
         ))}

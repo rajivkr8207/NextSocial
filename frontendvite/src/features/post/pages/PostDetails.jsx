@@ -12,7 +12,6 @@ const PostDetails = () => {
     useEffect(() => {
         async function loadPost() {
             const res = await FetchSinglePost(id);
-            console.log(res);
             setPost(res.post);
         }
         loadPost();
